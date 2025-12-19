@@ -1,4 +1,5 @@
-import pool from '../config/database.js';
+import 'dotenv/config';
+import pool from '../config/database';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';

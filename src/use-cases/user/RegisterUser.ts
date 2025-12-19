@@ -1,6 +1,6 @@
 import { User } from "../../domain/entities/User.js";
 import { UserRepository } from "../../domain/interfaces/UserRepository.js";
-import { generateId, hashPassword } from "../../shared/utils";
+import { generateId, hashPassword } from "../../shared/utils/index.js";
 
 export class RegisterUser {
   constructor(private userRepository: UserRepository) {}
