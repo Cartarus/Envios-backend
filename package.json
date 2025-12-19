@@ -4,8 +4,10 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "joi": "^18.0.2",
     "pg": "^8.16.3",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "zod": "^4.2.1"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",

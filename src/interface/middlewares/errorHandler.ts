@@ -14,6 +14,15 @@ export const errorHandler = (
     });
   }
 
+  // Error de parsing de JSON
+  if (err instanceof SyntaxError && 'body' in err) {
+    return res.status(400).json({
+      success: false,
+      message: "JSON inválido. Revisa que no haya comas finales o sintaxis incorrecta",
+      error: err.message
+    });
+  }
+
   // Error no manejado
   console.error("Error no manejado:", err);
   
