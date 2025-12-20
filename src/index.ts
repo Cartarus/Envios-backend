@@ -4,6 +4,7 @@ import cors from "cors";
 import { userRoutes } from "./interface/routes/userRoutes";
 import { rateRoutes } from "./interface/routes/rateRoutes";
 import { errorHandler } from "./interface/middlewares/errorHandler";
+import { locationRoutes } from './interface/routes/locationRoutes';
 
 const app = express();
 app.use(cors({
@@ -11,8 +12,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use("/api", userRoutes);
-app.use("/api", rateRoutes);
+app.use("/api/auth", userRoutes);
+app.use("/api/rate", rateRoutes);
+app.use("/api/location", locationRoutes);
 app.get("/health", (req, res) => {
   res.send("OK");
 });
