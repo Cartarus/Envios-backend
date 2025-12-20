@@ -7,7 +7,7 @@ export class LocationController  {
   async getAllLocations(req: Request, res: Response, next: NextFunction) {
     try {
       const locations = await this.getLocations.execute();
-      res.status(200).json(locations);
+      res.status(200).json({ success: true, locations });
     } catch (error) {
       next(error);
     }
