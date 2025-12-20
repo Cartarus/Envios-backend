@@ -15,12 +15,12 @@ const generateJwt = new GenerateJwt(userRepository);
 
 const userController = new UserController(registerUser, generateJwt);
 
-router.post("/auth/register",validateSchema(registerUserSchema), async (req, res, next) => 
+router.post("/register",validateSchema(registerUserSchema), async (req, res, next) => 
   userController.createUser(req, res, next)
 );
   
 
-router.post("/auth/login", async (req, res, next) => 
+router.post("/login", async (req, res, next) => 
   userController.loginUser(req, res, next)
 );
 
