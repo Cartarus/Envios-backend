@@ -10,7 +10,8 @@ const __dirname = dirname(__filename);
 const migrations = [
   '001_create_users_table.sql',
   '002_create_locations_table.sql',
-  '003_create_rates_table.sql'
+  '003_create_rates_table.sql',
+  '004_create_shipments_table.sql'
 ];
 
 async function runMigrations() {

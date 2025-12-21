@@ -1,0 +1,5 @@
+import { Shipment } from "../entities/Shipment"
+
+export interface ShipmentRepository {
+  create(data: Omit<Shipment, "id" | "createdAt">): Promise<Shipment>
+}
