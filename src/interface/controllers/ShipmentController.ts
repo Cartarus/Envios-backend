@@ -1,9 +1,11 @@
 import { CreateShipment } from '../../use-cases/shipment/CreateShipment';
 import { NextFunction, Request, Response } from "express";
 import { ListUserShipments } from '../../use-cases/shipment/listUserShipments';
+import { GetShipmentById } from '../../use-cases/shipment/GetShipmentById';
+import { NotFoundError } from '../../shared/errors/AppError';
 
 export class ShipmentController {
-    constructor(private createShipment: CreateShipment, private listUserShipments: ListUserShipments) {}
+    constructor(private createShipment: CreateShipment, private listUserShipments: ListUserShipments, private getShipmentById: GetShipmentById) {}
 
     async storeShipment(req: Request, res: Response, next: NextFunction){
         try {
@@ -40,6 +42,20 @@ export class ShipmentController {
 
             const shipments = await this.listUserShipments.execute(userId);
             return res.status(200).json({ success: true, shipments });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getShipment(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { shipmentId } = req.params;
+
+            const shipment = await this.getShipmentById.execute(shipmentId);
+            if (!shipment) {
+                throw new NotFoundError("Envío no encontrado");
+            }
+            return res.status(200).json({ success: true, shipment });
         } catch (error) {
             next(error);
         }
