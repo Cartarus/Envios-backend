@@ -13,17 +13,20 @@ import { ListUserShipments } from "../../use-cases/shipment/listUserShipments";
 import { GetShipmentById } from "../../use-cases/shipment/GetShipmentById";
 import { AddShipmentStatus } from "../../use-cases/shipmentStatus/AddShipmentStatus";
 import { PostgresShipmentStatusHistory } from "../../infrastructure/repositories/PostgresShipmentStatusHistory";
+import { PostgresLocationRepository } from "../../infrastructure/repositories/PostgresLocationRepository";
 
 const router = Router();
 
 const shipmentRepository = new PostgresShipmentRepository();
 const shipmentStatusHistoryRepository = new PostgresShipmentStatusHistory();
+const locationRepository = new PostgresLocationRepository();
 const createShipment = new CreateShipment(shipmentRepository);
 const listUserShipments = new ListUserShipments(shipmentRepository);
 const getShipmentById = new GetShipmentById(shipmentRepository);
 const addShipmentStatus = new AddShipmentStatus(
   shipmentStatusHistoryRepository,
-  shipmentRepository
+  shipmentRepository,
+  locationRepository
 );
 
 const shipmentController = new ShipmentController(

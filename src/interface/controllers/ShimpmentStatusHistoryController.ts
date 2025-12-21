@@ -18,7 +18,7 @@ export class ShipmentStatusHistoryController {
 
             const shipmentStatus = await this.addShipmentStatus.execute(
                 shipmentId,
-                status,
+                ShipmentStatus[status as keyof typeof ShipmentStatus],
                 locationId
             );
             return res.status(201).json({ success: true, shipmentStatus });

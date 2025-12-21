@@ -12,6 +12,7 @@ export class AddShipmentStatus {
   constructor(
     private statusRepo: ShipmentStatusHistoryRepository,
     private shipmentRepo: ShipmentRepository,
+    private locationRepo: LocationRepository
   ) {}
 
   async execute(
@@ -24,6 +25,10 @@ export class AddShipmentStatus {
     if (!shipment) {
       throw new NotFoundError("Envío no encontrado")
     }
+
+    const locations: Location[] = await this.locationRepo.findAll();
+
+    const locationIds = locations.map((loc) => loc.id);
     
     if (status === ShipmentStatus.PENDING) {
         locationId = shipment.originId
@@ -32,7 +37,7 @@ export class AddShipmentStatus {
     if (status === ShipmentStatus.DELIVERED) {
       locationId = shipment.destinationId
     }
-
+    
     await this.statusRepo.add({
       shipmentId,
       status,
