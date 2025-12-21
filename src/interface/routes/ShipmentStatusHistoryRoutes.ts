@@ -31,7 +31,7 @@ router.post(
 );
 
 router.get(
-  "/:shipmentId/tracking",
+  "/:shipmentId",
   authenticateToken,
   async (req, res, next) => shipmentStatusHistoryController.getTracking(req, res, next)
 );

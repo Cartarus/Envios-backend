@@ -27,7 +27,7 @@ export class PostgresShipmentStatusHistory
       SELECT
         ssh.status,
         ssh.created_at,
-        l.code AS location
+        l.name AS location
       FROM shipment_status_history ssh
       LEFT JOIN locations l ON l.id = ssh.location_id
       WHERE ssh.shipment_id = $1

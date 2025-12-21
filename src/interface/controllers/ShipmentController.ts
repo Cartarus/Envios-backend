@@ -6,13 +6,16 @@ import { NotFoundError } from '../../shared/errors/AppError';
 import { AddShipmentStatus } from '../../use-cases/shipmentStatus/AddShipmentStatus';
 import { ShipmentStatus } from '../../domain/entities/ShimpentStatus';
 import { Location } from '../../domain/entities/Location';
+import { GetShipmentTracking } from '../../use-cases/shipmentStatus/GetShipmentTracking';
 
 export class ShipmentController {
     constructor(
         private createShipment: CreateShipment,
         private listUserShipments: ListUserShipments,
         private getShipmentById: GetShipmentById,
-        private addShipmentStatus: AddShipmentStatus
+        private addShipmentStatus: AddShipmentStatus,
+        private getShipmentTracking: GetShipmentTracking
+
     ) {}
 
     async storeShipment(req: Request, res: Response, next: NextFunction){
@@ -46,6 +49,8 @@ export class ShipmentController {
                 originId
             );
 
+            
+
             return res.status(201).json({ success: true, shipment });
         } catch (error) {
             next(error);
@@ -71,7 +76,9 @@ export class ShipmentController {
             if (!shipment) {
                 throw new NotFoundError("Envío no encontrado");
             }
-            return res.status(200).json({ success: true, shipment });
+
+            const trackingHistory = await this.getShipmentTracking.execute(shipment.id);
+            return res.status(200).json({ success: true, shipment , trackingHistory});
         } catch (error) {
             next(error);
         }
