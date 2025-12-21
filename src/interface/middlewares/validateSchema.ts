@@ -5,9 +5,9 @@ const require = createRequire(import.meta.url);
 const Joi = require("joi");
 
 export const validateSchema =
-  (schema: typeof Joi.ObjectSchema) =>
+  (schema: typeof Joi.ObjectSchema, property: "body" | "params" = "body") =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { error, value } = schema.validate(req.body, {
+    const { error, value } = schema.validate(req[property], {
       abortEarly: false,
       stripUnknown: true
     });
