@@ -27,7 +27,7 @@ export class ShipmentController {
                 length,
                 price
             });
-            return res.status(201).json(shipment)
+            return res.status(201).json({ success: true, shipment });
         } catch (error) {
             next(error);
         }
