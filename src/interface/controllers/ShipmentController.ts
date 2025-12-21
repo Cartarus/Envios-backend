@@ -3,9 +3,17 @@ import { NextFunction, Request, Response } from "express";
 import { ListUserShipments } from '../../use-cases/shipment/listUserShipments';
 import { GetShipmentById } from '../../use-cases/shipment/GetShipmentById';
 import { NotFoundError } from '../../shared/errors/AppError';
+import { AddShipmentStatus } from '../../use-cases/shipmentStatus/AddShipmentStatus';
+import { ShipmentStatus } from '../../domain/entities/ShimpentStatus';
+import { Location } from '../../domain/entities/Location';
 
 export class ShipmentController {
-    constructor(private createShipment: CreateShipment, private listUserShipments: ListUserShipments, private getShipmentById: GetShipmentById) {}
+    constructor(
+        private createShipment: CreateShipment,
+        private listUserShipments: ListUserShipments,
+        private getShipmentById: GetShipmentById,
+        private addShipmentStatus: AddShipmentStatus
+    ) {}
 
     async storeShipment(req: Request, res: Response, next: NextFunction){
         try {
@@ -30,6 +38,14 @@ export class ShipmentController {
                 length,
                 price
             });
+
+            // Crear estado inicial del envío
+            await this.addShipmentStatus.execute(
+                shipment.id,
+                ShipmentStatus.PENDING,
+                originId
+            );
+
             return res.status(201).json({ success: true, shipment });
         } catch (error) {
             next(error);

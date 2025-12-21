@@ -11,18 +11,26 @@ import {
 } from "../../validators/shipmentValidators";
 import { ListUserShipments } from "../../use-cases/shipment/listUserShipments";
 import { GetShipmentById } from "../../use-cases/shipment/GetShipmentById";
+import { AddShipmentStatus } from "../../use-cases/shipmentStatus/AddShipmentStatus";
+import { PostgresShipmentStatusHistory } from "../../infrastructure/repositories/PostgresShipmentStatusHistory";
 
 const router = Router();
 
 const shipmentRepository = new PostgresShipmentRepository();
+const shipmentStatusHistoryRepository = new PostgresShipmentStatusHistory();
 const createShipment = new CreateShipment(shipmentRepository);
 const listUserShipments = new ListUserShipments(shipmentRepository);
 const getShipmentById = new GetShipmentById(shipmentRepository);
+const addShipmentStatus = new AddShipmentStatus(
+  shipmentStatusHistoryRepository,
+  shipmentRepository
+);
 
 const shipmentController = new ShipmentController(
   createShipment,
   listUserShipments,
-  getShipmentById
+  getShipmentById,
+  addShipmentStatus
 );
 
 router.post(

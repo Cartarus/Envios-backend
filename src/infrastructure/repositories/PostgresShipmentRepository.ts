@@ -63,6 +63,8 @@ export class PostgresShipmentRepository
         s.id,
         s.price,
         s.created_at,
+        s.origin_id AS "originId",
+        s.destination_id AS "destinationId",
         o.code AS origin,
         d.code AS destination,
         s.weight,

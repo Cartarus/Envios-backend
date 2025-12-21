@@ -4,6 +4,8 @@ import { ShipmentStatus } from "../../domain/entities/ShimpentStatus"
 import { ShipmentRepository } from "../../domain/interfaces/ShipmentRepository"
 import { ShipmentStatusHistoryRepository } from "../../domain/interfaces/ShipmentStatusHistoryRepository"
 import { NotFoundError } from "../../shared/errors/AppError"
+import { LocationRepository } from "../../domain/interfaces/LocationRepository";
+import { Location } from '../../domain/entities/Location';
 
 
 export class AddShipmentStatus {
@@ -22,10 +24,9 @@ export class AddShipmentStatus {
     if (!shipment) {
       throw new NotFoundError("Envío no encontrado")
     }
-
-
+    
     if (status === ShipmentStatus.PENDING) {
-      locationId = shipment.originId
+        locationId = shipment.originId
     }
 
     if (status === ShipmentStatus.DELIVERED) {
