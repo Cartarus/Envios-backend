@@ -1,6 +1,6 @@
 CREATE TABLE shipments (
   id UUID PRIMARY KEY,
-  user_id UUID NOT NULL,
+  user_id UUID NOT NULL REFERENCES users(id),
   origin_id UUID REFERENCES locations(id),
   destination_id UUID REFERENCES locations(id),
   weight INT,
