@@ -1,6 +1,7 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizedError } from "../../shared/errors/AppError";
+import { UserPayload } from "../../types/express";
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
   try {
@@ -13,7 +14,7 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
       if (err) {
         throw new UnauthorizedError("Token de autenticación inválido o expirado");
       }
-      req.user = user;
+      req.user = user as UserPayload;
       next();
     });
   } catch (error) {
