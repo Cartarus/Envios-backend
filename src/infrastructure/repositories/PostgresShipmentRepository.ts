@@ -43,10 +43,19 @@ export class PostgresShipmentRepository
         s.price,
         s.created_at,
         o.code AS origin,
-        d.code AS destination
+        d.code AS destination,
+        latest_status.status AS "status",
+        latest_status.created_at AS "statusUpdatedAt"
       FROM shipments s
       JOIN locations o ON o.id = s.origin_id
       JOIN locations d ON d.id = s.destination_id
+      LEFT JOIN LATERAL (
+        SELECT status, created_at
+        FROM shipment_status_history
+        WHERE shipment_id = s.id
+        ORDER BY created_at DESC
+        LIMIT 1
+      ) latest_status ON true
       WHERE s.user_id = $1
       ORDER BY s.created_at DESC
       `,
