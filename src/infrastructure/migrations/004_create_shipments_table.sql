@@ -8,6 +8,5 @@ CREATE TABLE shipments (
   width INT,
   length INT,
   price DECIMAL,
-  status VARCHAR(30),
   created_at TIMESTAMP DEFAULT NOW()
 );

@@ -11,7 +11,8 @@ const migrations = [
   '001_create_users_table.sql',
   '002_create_locations_table.sql',
   '003_create_rates_table.sql',
-  '004_create_shipments_table.sql'
+  '004_create_shipments_table.sql',
+  '005_create_shipment_status_history_table.sql'
 ];
 
 async function runMigrations() {
@@ -46,6 +47,8 @@ async function runMigrations() {
 async function cleanDatabase() {
   // Eliminar tablas en orden inverso por dependencias
   await pool.query(`
+    DROP TABLE IF EXISTS shipment_status_history CASCADE;
+    DROP TABLE IF EXISTS shipments CASCADE;
     DROP TABLE IF EXISTS rates CASCADE;
     DROP TABLE IF EXISTS locations CASCADE;
     DROP TABLE IF EXISTS users CASCADE;

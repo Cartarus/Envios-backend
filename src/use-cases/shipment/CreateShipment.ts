@@ -26,7 +26,6 @@ export class CreateShipment {
 
     return this.shipmentRepository.create({
       ...data,
-      status: ShipmentStatus.PENDING
     })
   }
 

@@ -13,6 +13,13 @@ export const validateSchema =
     });
 
     if (error) {
+
+      if (req[property] === undefined) {
+        return res.status(400).json({
+          message: "Error de validación",
+          errors: ["Datos de entrada faltantes"]
+        });
+      }
       return res.status(400).json({
         message: "Error de validación",
         errors: error.details.map((e: any) => e.message)

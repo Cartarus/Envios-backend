@@ -14,9 +14,9 @@ export class PostgresShipmentRepository
       INSERT INTO shipments (
         id, user_id, origin_id, destination_id,
         weight, height, width, length,
-        price, status
+        price
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
       RETURNING *
       `,
       [
@@ -29,7 +29,6 @@ export class PostgresShipmentRepository
         data.width,
         data.length,
         data.price,
-        data.status
       ]
     )
 
@@ -42,7 +41,6 @@ export class PostgresShipmentRepository
       SELECT
         s.id,
         s.price,
-        s.status,
         s.created_at,
         o.code AS origin,
         d.code AS destination
@@ -64,7 +62,6 @@ export class PostgresShipmentRepository
       SELECT
         s.id,
         s.price,
-        s.status,
         s.created_at,
         o.code AS origin,
         d.code AS destination,

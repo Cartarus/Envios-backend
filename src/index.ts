@@ -6,6 +6,7 @@ import { rateRoutes } from "./interface/routes/rateRoutes";
 import { errorHandler } from "./interface/middlewares/errorHandler";
 import { locationRoutes } from './interface/routes/locationRoutes';
 import { shipmentRoutes } from './interface/routes/shipmentRoutes';
+import { shipmentStatusHistoryRoutes } from './interface/routes/ShipmentStatusHistoryRoutes';
 
 const app = express();
 app.use(cors({
@@ -17,6 +18,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/rate", rateRoutes);
 app.use("/api/location", locationRoutes);
 app.use("/api/shipment", shipmentRoutes);
+app.use("/api/shipment-status", shipmentStatusHistoryRoutes);
 app.get("/health", (req, res) => {
   res.send("OK");
 });
