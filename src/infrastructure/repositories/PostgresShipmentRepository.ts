@@ -35,4 +35,26 @@ export class PostgresShipmentRepository
 
     return result.rows[0]
   }
+
+  async findByUser(userId: string) {
+    const result = await pool.query(
+      `
+      SELECT
+        s.id,
+        s.price,
+        s.status,
+        s.created_at,
+        o.code AS origin,
+        d.code AS destination
+      FROM shipments s
+      JOIN locations o ON o.id = s.origin_id
+      JOIN locations d ON d.id = s.destination_id
+      WHERE s.user_id = $1
+      ORDER BY s.created_at DESC
+      `,
+      [userId]
+    )
+
+    return result.rows
+  }
 }
