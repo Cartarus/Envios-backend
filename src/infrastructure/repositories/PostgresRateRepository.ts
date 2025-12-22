@@ -1,14 +1,14 @@
-import { RateRepository } from "../../domain/interfaces/RateRepository"
-import pool from "../config/database"
-
+import { RateRepository } from "../../domain/interfaces/RateRepository";
+import pool from "../config/database";
+import { Pool } from "pg";
 
 export class PostgresRateRepository implements RateRepository {
-  async findRate(
-    originCode: string,
-    destinationCode: string,
-    weight: number
-  ) {
-    const result = await pool.query(
+  private pool: Pool;
+  constructor(testPool?: Pool) {
+    this.pool = testPool || pool;
+  }
+  async findRate(originCode: string, destinationCode: string, weight: number) {
+    const result = await this.pool.query(
       `
       SELECT r.*
       FROM rates r
@@ -20,8 +20,8 @@ export class PostgresRateRepository implements RateRepository {
       LIMIT 1
       `,
       [originCode, destinationCode, weight]
-    )
+    );
 
-    return result.rows[0] || null
+    return result.rows[0] || null;
   }
 }
