@@ -30,6 +30,15 @@ services:
     networks:
       - envios_network
 
+  redis:
+    image: redis:7-alpine
+    container_name: envios_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - envios_network
+
 volumes:
   postgres_data:
 
