@@ -66,3 +66,19 @@ export const createShipmentSchema = Joi.object({
 })
   .required()
   .unknown(false);
+
+export const getShipmentByIdSchema = Joi.object({
+  shipmentId: Joi.string()
+    .uuid()
+    .required()
+    .messages({
+      "string.guid": "El ID del envío debe ser un UUID válido",
+      "any.required": "El ID del envío es obligatorio",
+      "string.empty": "El ID del envío no puede estar vacío"
+    })
+})
+  .required()
+  .unknown(false);
+
+
+

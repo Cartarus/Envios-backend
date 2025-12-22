@@ -8,6 +8,5 @@ export interface Shipment {
   width: number
   length: number
   price: number
-  status: string
   createdAt: Date
 }
