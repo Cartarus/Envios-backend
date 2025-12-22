@@ -7,6 +7,10 @@ import { errorHandler } from "./interface/middlewares/errorHandler";
 import { locationRoutes } from './interface/routes/locationRoutes';
 import { shipmentRoutes } from './interface/routes/shipmentRoutes';
 import { shipmentStatusHistoryRoutes } from './interface/routes/ShipmentStatusHistoryRoutes';
+import { connectRedis } from './infrastructure/cahe/redisClient';
+
+await connectRedis();
+
 
 const app = express();
 app.use(cors({
