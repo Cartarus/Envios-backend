@@ -2,14 +2,21 @@
 import { v4 as uuid } from "uuid"
 import { ShipmentRepository } from "../../domain/interfaces/ShipmentRepository"
 import pool from "../config/database"
+import { Pool } from "pg";
 
 export class PostgresShipmentRepository
   implements ShipmentRepository
 {
+  private pool: Pool;
+
+  constructor(testPool?: Pool) {
+    this.pool = testPool || pool;
+  }
+
   async create(data: any) {
     const id = uuid()
 
-    const result = await pool.query(
+    const result = await this.pool.query(
       `
       INSERT INTO shipments (
         id, user_id, origin_id, destination_id,
@@ -17,7 +24,17 @@ export class PostgresShipmentRepository
         price
       )
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-      RETURNING *
+      RETURNING 
+        id,
+        user_id AS "userId",
+        origin_id AS "originId",
+        destination_id AS "destinationId",
+        weight,
+        height,
+        width,
+        length,
+        price,
+        created_at AS "createdAt"
       `,
       [
         id,
@@ -36,7 +53,7 @@ export class PostgresShipmentRepository
   }
 
   async findByUser(userId: string) {
-    const result = await pool.query(
+    const result = await  this.pool.query(
       `
       SELECT
         s.id,
@@ -66,12 +83,13 @@ export class PostgresShipmentRepository
   }
 
   async findById(shipmentId: string) {
-    const result = await pool.query(
+    const result = await  this.pool.query(
       `
       SELECT
         s.id,
+        s.user_id AS "userId",
         s.price,
-        s.created_at,
+        s.created_at AS "createdAt",
         s.origin_id AS "originId",
         s.destination_id AS "destinationId",
         o.code AS origin,

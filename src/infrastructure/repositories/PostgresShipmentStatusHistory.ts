@@ -1,14 +1,21 @@
 import { ShipmentStatusHistoryRepository } from "../../domain/interfaces/ShipmentStatusHistoryRepository";
 import pool from "../config/database";
 import { v4 as uuid } from "uuid"
+import { Pool } from "pg";
 
 
 export class PostgresShipmentStatusHistory
   implements ShipmentStatusHistoryRepository
 {
+  private pool: Pool;
+
+  constructor(testPool?: Pool) {
+    this.pool = testPool || pool;
+  }
+
   async add({ shipmentId, status, locationId }: { shipmentId: string; status: string; locationId: string; }) {
     const id = uuid()
-    const result = await pool.query(
+    const result = await this.pool.query(
       `
       INSERT INTO shipment_status_history
       (id, shipment_id, status, location_id)
@@ -22,11 +29,14 @@ export class PostgresShipmentStatusHistory
   }
 
   async findByShipmentId(shipmentId: string) {
-    const result = await pool.query(
+    const result = await this.pool.query(
       `
       SELECT
+        ssh.id,
+        ssh.shipment_id AS "shipmentId",
         ssh.status,
-        ssh.created_at,
+        ssh.location_id AS "locationId",
+        ssh.created_at AS "createdAt",
         l.name AS location
       FROM shipment_status_history ssh
       LEFT JOIN locations l ON l.id = ssh.location_id
