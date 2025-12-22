@@ -2,6 +2,9 @@ import { newDb, IMemoryDb, DataType } from 'pg-mem';
 import { Pool } from 'pg';
 import { runMigrations, seedData } from './testMigrations.js';
 
+// Configurar variables de entorno para las pruebas
+process.env.JWT_SECRET = "test-secret-key-for-jwt-testing";
+
 let db: IMemoryDb;
 let pool: Pool;
 
