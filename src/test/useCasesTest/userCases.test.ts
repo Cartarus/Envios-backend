@@ -1,49 +1,23 @@
 import { RegisterUser } from "../../use-cases/user/RegisterUser";
 import { GenerateJwt } from "../../use-cases/user/GenerateJwt";
 import { User } from "../../domain/entities/User";
-import { UserRepository } from "../../domain/interfaces/UserRepository";
 import { ConflictError, UnauthorizedError } from "../../shared/errors/AppError";
 import { hashPassword } from "../../shared/utils/hashPassword";
-
-// Mock del repositorio de usuario
-class MockUserRepository implements UserRepository {
-  private users: User[] = [];
-
-  async create(user: User): Promise<void> {
-    this.users.push(user);
-  }
-
-  async findById(id: string): Promise<User | null> {
-    return this.users.find((user) => user.id === id) || null;
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    return this.users.find((user) => user.email === email) || null;
-  }
-
-  // Método auxiliar para limpiar los datos en las pruebas
-  clear(): void {
-    this.users = [];
-  }
-
-  // Método auxiliar para agregar usuarios de prueba
-  async addUser(user: User): Promise<void> {
-    this.users.push(user);
-  }
-}
+import { PostgresUserRepository } from "../../infrastructure/repositories/PostgresUserRepository";
+import { pool } from "../setup";
 
 describe("User Use Cases", () => {
-  let mockUserRepository: MockUserRepository;
+  let userRepository: PostgresUserRepository;
 
   beforeEach(() => {
-    mockUserRepository = new MockUserRepository();
+    userRepository = new PostgresUserRepository(pool);
   });
 
   describe("RegisterUser", () => {
     let registerUser: RegisterUser;
 
     beforeEach(() => {
-      registerUser = new RegisterUser(mockUserRepository);
+      registerUser = new RegisterUser(userRepository);
     });
 
     it("debería registrar un nuevo usuario correctamente", async () => {
@@ -72,7 +46,7 @@ describe("User Use Cases", () => {
 
       const user = await registerUser.execute(userData);
 
-      const storedUser = await mockUserRepository.findById(user.id);
+      const storedUser = await userRepository.findById(user.id);
       expect(storedUser).toBeDefined();
       expect(storedUser?.email).toBe(userData.email);
     });
@@ -123,11 +97,11 @@ describe("User Use Cases", () => {
     let generateJwt: GenerateJwt;
 
     beforeEach(() => {
-      generateJwt = new GenerateJwt(mockUserRepository);
+      generateJwt = new GenerateJwt(userRepository);
     });
 
     it("debería generar un token JWT para credenciales válidas", async () => {
-      // Crear un usuario de prueba
+      // Crear un usuario de prueba directamente en la base de datos
       const password = "mySecurePassword";
       const hashedPassword = await hashPassword(password);
       const testUser = new User(
@@ -136,7 +110,7 @@ describe("User Use Cases", () => {
         "test@example.com",
         hashedPassword
       );
-      await mockUserRepository.addUser(testUser);
+      await userRepository.create(testUser);
 
       const credentials = {
         email: "test@example.com",
@@ -162,7 +136,7 @@ describe("User Use Cases", () => {
         "ana@example.com",
         hashedPassword
       );
-      await mockUserRepository.addUser(testUser);
+      await userRepository.create(testUser);
 
       const result = await generateJwt.execute({
         email: "ana@example.com",
@@ -202,7 +176,7 @@ describe("User Use Cases", () => {
         "pedro@example.com",
         hashedPassword
       );
-      await mockUserRepository.addUser(testUser);
+      await userRepository.create(testUser);
 
       const credentials = {
         email: "pedro@example.com",
@@ -231,7 +205,7 @@ describe("User Use Cases", () => {
         "laura@example.com",
         hashedPassword
       );
-      await mockUserRepository.addUser(testUser);
+      await userRepository.create(testUser);
 
       const credentials = {
         email: "laura@example.com",

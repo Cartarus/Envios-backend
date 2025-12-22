@@ -1,8 +1,15 @@
 import { User } from '../../domain/entities/User.js';
 import { UserRepository } from '../../domain/interfaces/UserRepository.js';
+import { Pool } from 'pg';
 import pool from '../config/database.js';
 
 export class PostgresUserRepository implements UserRepository {
+  private pool: Pool;
+
+  constructor(testPool?: Pool) {
+    this.pool = testPool || pool;
+  }
+
   async create(user: User): Promise<void> {
     const query = `
       INSERT INTO users (id, name, email, password)
@@ -12,7 +19,7 @@ export class PostgresUserRepository implements UserRepository {
     const values = [user.id, user.name, user.email, user.password];
     
     try {
-      await pool.query(query, values);
+      await this.pool.query(query, values);
     } catch (error) {
       throw new Error(`Error al crear usuario: ${error}`);
     }
@@ -26,7 +33,7 @@ export class PostgresUserRepository implements UserRepository {
     `;
     
     try {
-      const result = await pool.query(query, [id]);
+      const result = await this.pool.query(query, [id]);
       
       if (result.rows.length === 0) {
         return null;
@@ -47,7 +54,7 @@ export class PostgresUserRepository implements UserRepository {
     `;
     
     try {
-      const result = await pool.query(query, [email]);
+      const result = await this.pool.query(query, [email]);
       
       if (result.rows.length === 0) {
         return null;
