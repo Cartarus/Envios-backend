@@ -1,20 +1,29 @@
 import { GetLocations } from "../../use-cases/location/GetLocations";
 import { NotFoundError } from "../../shared/errors/AppError";
 import { PostgresLocationRepository } from "../../infrastructure/repositories/PostgresLocationRepository";
+import { LocationCacheRepository } from "../../domain/interfaces/LocationCacheRepository";
+import { Location } from "../../domain/entities/Location";
 import { pool } from "../setup";
 
 describe("Location Use Cases", () => {
   let locationRepository: PostgresLocationRepository;
+  let mockCacheRepository: LocationCacheRepository;
+  
 
   beforeEach(() => {
     locationRepository = new PostgresLocationRepository(pool);
+    // Mock del cache repository que siempre retorna null (sin caché)
+    mockCacheRepository = {
+      getAll: async () => null,
+      save: async () => {},
+    };
   });
 
   describe("GetLocations", () => {
     let getLocations: GetLocations;
 
     beforeEach(() => {
-      getLocations = new GetLocations(locationRepository);
+      getLocations = new GetLocations(locationRepository, mockCacheRepository);
     });
 
     it("debería obtener todas las ubicaciones disponibles", async () => {
