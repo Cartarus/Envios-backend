@@ -1,0 +1,5 @@
+CREATE TABLE locations (
+  id UUID PRIMARY KEY,
+  code VARCHAR(10) UNIQUE NOT NULL, -- BOG, MED, CAL
+  name VARCHAR(100) NOT NULL
+);
